@@ -1,7 +1,10 @@
 # BepInEx RTL Support
 ### Support for Right-to-Left (RTL) Languages
+<div align="center">
 
 [English](README.en.md) | [العربية](README.md) | [فارسی](README.fa.md) | [اردو](README.ur.md)
+
+</div>
 
 ## 📖 About the Project
 
@@ -107,33 +110,19 @@ We welcome your contributions! You can:
 
 ---
 
-## 📄 License
+## ⚖️ License
 
-This project is licensed under the MIT License.
+This project is licensed under the **GNU GPL v3** License. Accordingly:
 
----
-
-## 👥 Development Team
-
-<div align="center">
-
-### Rihla Team
+1. **Attribution:** "Rihla Team" and the original project link must be mentioned in any derivative or modified versions.
+2. **Commercial Use:** The software or any modified version of it may not be used in paid products without clearly indicating the original team's rights and providing the source code to the end user.
+3. **Modifications:** Rihla Team (the original developer) reserves the right to quote or merge any improvements or modifications published by third parties and add them to the official repository for the benefit of all.
 
 ---
 
-**Development & Programming:**
-**Ibn Al-Sadeem** ([@lub131](https://github.com/lub131))
+## 👥 Contributors
 
-</div>
-
----
-
-## 🙏 Special Thanks
-
-- **Mohammed** ([@momaqbol](https://github.com/momaqbol))
-- [BepInEx](https://github.com/BepInEx/BepInEx) team
-- Unity Modding community
-- All contributors and testers
+You can find the list of developers and contributors to this project in the [CONTRIBUTORS.md](CONTRIBUTORS.md) file.
 
 ---
 
