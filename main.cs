@@ -32,36 +32,34 @@ namespace KoH2RTLFix
             {
                 // تحميل الإعدادات
                 PluginConfig = new ModConfiguration(base.Config);
+                ArabicTextProcessor.LoadPersistentCache();
 
                 // تطبيق Harmony patches
                 var harmony = new Harmony(PluginInfo.PLUGIN_GUID);
                 harmony.PatchAll();
 
-                Log.LogInfo($"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded successfully.");
-                Log.LogInfo($"Configuration: Alignment={PluginConfig.TextAlignment.Value}, " +
+                PluginLog.Info($"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded successfully.");
+                PluginLog.Info($"Configuration: Alignment={PluginConfig.TextAlignment.Value}, " +
                            $"EasternArabicNumerals={PluginConfig.ConvertToEasternArabicNumerals.Value}, " +
                            $"CacheSize={PluginConfig.CacheSize.Value}");
 
                 if (PluginConfig.EnablePerformanceMetrics.Value)
                 {
                     PerformanceMonitor.Initialize();
-                    Log.LogInfo("Performance monitoring enabled.");
-                }
-
-                if (PluginConfig.EnableDiagnostics.Value)
-                {
-                    Diagnostics.Run();
+                    PluginLog.Info("Performance monitoring enabled.");
                 }
             }
             catch (Exception ex)
             {
-                Log.LogError($"Failed to initialize plugin: {ex.Message}");
-                Log.LogDebug(ex.StackTrace);
+                PluginLog.Error($"Failed to initialize plugin: {ex.Message}");
+                PluginLog.Debug(ex.StackTrace);
             }
         }
 
         void OnDestroy()
         {
+            ArabicTextProcessor.SavePersistentCache();
+            PluginLog.Shutdown();
             if (PluginConfig?.EnablePerformanceMetrics?.Value == true)
             {
                 PerformanceMonitor.LogFinalReport();

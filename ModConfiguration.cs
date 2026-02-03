@@ -21,8 +21,14 @@ namespace KoH2RTLFix
         public ConfigEntry<bool> ConvertToEasternArabicNumerals { get; }
         public ConfigEntry<int> CacheSize { get; }
         public ConfigEntry<bool> EnablePerformanceMetrics { get; }
+        public ConfigEntry<bool> EnablePersistentCache { get; }
+        public ConfigEntry<string> PersistentCacheFileName { get; }
         public ConfigEntry<LogLevel> LoggingLevel { get; }
-        public ConfigEntry<bool> EnableDiagnostics { get; }
+        public ConfigEntry<bool> EnableTextTrace { get; }
+        public ConfigEntry<bool> TraceAllTextAssignments { get; }
+        public ConfigEntry<int> TextTraceMaxChars { get; }
+        public ConfigEntry<bool> EnableSeparateLogFile { get; }
+        public ConfigEntry<string> SeparateLogFileName { get; }
 
         // دعم اللغات
         public ConfigEntry<bool> EnableArabic { get; }
@@ -30,20 +36,20 @@ namespace KoH2RTLFix
         public ConfigEntry<bool> EnableUrdu { get; }
 
         // معالجة النصوص
-        public ConfigEntry<bool> PreserveEnglishNumbers { get; }
         public ConfigEntry<bool> MirrorBrackets { get; }
         public ConfigEntry<bool> ProcessMultilineText { get; }
         public ConfigEntry<bool> IgnoreAngleBracketTags { get; }
         public ConfigEntry<bool> IgnoreCurlyBraceScopes { get; }
         public ConfigEntry<bool> IgnoreSquareBracketScopes { get; }
         public ConfigEntry<string> IgnoredScopes { get; }
+        public ConfigEntry<string> KeepBaseWhenIsolated { get; }
 
         public ModConfiguration(ConfigFile config)
         {
             // الإعدادات العامة
             TextAlignment = config.Bind(
-                "General", "TextAlignment", AlignmentOptions.Auto,
-                "محاذاة النص: Auto (تلقائي لليمين للعربية), Right (يمين), Left (يسار), Center (وسط)");
+                "General", "TextAlignment", AlignmentOptions.Right,
+                "محاذاة النص: Auto (معالجة RTL بدون تغيير المحاذاة الأصلية), Right (إجبار اليمين للنصوص العربية), Left (يسار), Center (وسط)");
 
             ConvertToEasternArabicNumerals = config.Bind(
                 "General", "ConvertToEasternArabicNumerals", false,
@@ -58,13 +64,38 @@ namespace KoH2RTLFix
                 "Performance", "EnablePerformanceMetrics", false,
                 "تفعيل قياس الأداء وتسجيل الإحصائيات");
 
+            EnablePersistentCache = config.Bind(
+                "Performance", "EnablePersistentCache", false,
+                "تفعيل حفظ/تحميل الكاش من ملف عند بدء التشغيل/الإغلاق (قد يسرّع في الجلسات القادمة)");
+
+            PersistentCacheFileName = config.Bind(
+                "Performance", "PersistentCacheFileName", "KoH2RTLFix.cache",
+                "اسم ملف الكاش الدائم (سيتم حفظه داخل مجلد BepInEx/config) ويمكن تغييره لكل لعبة");
+
             LoggingLevel = config.Bind(
                 "Debug", "LoggingLevel", LogLevel.Info,
                 "مستوى التسجيل (None, Fatal, Error, Warning, Message, Info, Debug, All)");
 
-            EnableDiagnostics = config.Bind(
-                "Debug", "EnableDiagnostics", true,
-                "تفعيل الفحص الذاتي عند التشغيل للكشف عن المشاكل");
+            EnableSeparateLogFile = config.Bind(
+                "Debug", "EnableSeparateLogFile", false,
+                "حفظ سجلات الإضافة في ملف منفصل داخل مجلد BepInEx/cache");
+
+            SeparateLogFileName = config.Bind(
+                "Debug", "SeparateLogFileName", "KoH2RTLFix.plugin.log",
+                "اسم ملف اللوج المنفصل (سيتم حفظه داخل BepInEx/cache)");
+
+            EnableTextTrace = config.Bind(
+                "Debug", "EnableTextTrace", false,
+                "تفعيل تتبع النصوص: تسجيل النص قبل/بعد المعالجة لتتبع ما يحدث (قد ينتج log كبير)");
+
+            TraceAllTextAssignments = config.Bind(
+                "Debug", "TraceAllTextAssignments", false,
+                "تتبع جميع تعيينات النص حتى لو كان إنجليزي/بدون RTL (قد ينتج log كبير جداً)");
+
+            TextTraceMaxChars = config.Bind(
+                "Debug", "TextTraceMaxChars", 220,
+                new ConfigDescription("الحد الأقصى لطول النص المسجل في تتبع النصوص",
+                    new AcceptableValueRange<int>(50, 4000)));
 
             // دعم اللغات
             EnableArabic = config.Bind(
@@ -80,10 +111,6 @@ namespace KoH2RTLFix
                 "تفعيل دعم اللغة الأردية");
 
             // معالجة النصوص
-            PreserveEnglishNumbers = config.Bind(
-                "TextProcessing", "PreserveEnglishNumbers", true,
-                "الحفاظ على الأرقام الإنجليزية في موقعها الصحيح");
-
             MirrorBrackets = config.Bind(
                 "TextProcessing", "MirrorBrackets", true,
                 "عكس الأقواس تلقائياً في النصوص RTL");
@@ -107,6 +134,10 @@ namespace KoH2RTLFix
             IgnoredScopes = config.Bind(
                 "TextProcessing", "IgnoredScopes", "<>{}[]",
                 "الأقواس التي يتم تجاهل ما بداخلها تماماً (مثل أكواد الألوان أو المتغيرات). كل زوج يمثل بداية ونهاية. مثال: <>[]{}");
+
+            KeepBaseWhenIsolated = config.Bind(
+                "TextProcessing", "KeepBaseWhenIsolated", "ه",
+                "حروف تُبقى على شكلها الأساسي عند العزل (لا تتحول للشكل المعزول). مفيد للحروف التي لا يدعم الخط شكلها المعزول. مثال: ه. لإضافة حروف أخرى: اكتب الحروف متتالية بدون فواصل");
         }
     }
 }

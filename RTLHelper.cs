@@ -82,8 +82,5 @@ namespace KoH2RTLFix
         public static bool IsPresentationForm(char c) =>
             (c >= 0xFE70 && c <= 0xFEFF) ||  // Arabic Presentation Forms-B
             (c >= 0xFB50 && c <= 0xFDFF);    // Arabic Presentation Forms-A
-
-        public static bool AlreadyFixed(string s) =>
-            !string.IsNullOrEmpty(s) && s.Any(IsPresentationForm);
     }
 }

@@ -46,11 +46,11 @@ namespace KoH2RTLFix
             var hitRate = (_cacheHits + _cacheMisses) > 0
                 ? (double)_cacheHits / (_cacheHits + _cacheMisses) * 100 : 0;
 
-            KoH2ArabicRTL.Log.LogInfo($"=== RTL Performance Report ===");
-            KoH2ArabicRTL.Log.LogInfo($"Session Duration: {totalSeconds:F1}s");
-            KoH2ArabicRTL.Log.LogInfo($"Total Processed: {_totalProcessed}");
-            KoH2ArabicRTL.Log.LogInfo($"Average Processing Time: {avgMs:F3}ms");
-            KoH2ArabicRTL.Log.LogInfo($"Cache Hit Rate: {hitRate:F1}% ({_cacheHits}/{_cacheHits + _cacheMisses})");
+            PluginLog.Info($"=== RTL Performance Report ===");
+            PluginLog.Info($"Session Duration: {totalSeconds:F1}s");
+            PluginLog.Info($"Total Processed: {_totalProcessed}");
+            PluginLog.Info($"Average Processing Time: {avgMs:F3}ms");
+            PluginLog.Info($"Cache Hit Rate: {hitRate:F1}% ({_cacheHits}/{_cacheHits + _cacheMisses})");
         }
     }
 }
